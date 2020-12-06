@@ -12,5 +12,5 @@ openFile = TIO.readFile . T.unpack
 {-|
     Print to STD
 -}
-printFile :: T.Text -> IO ()
-printFile = TIO.putStrLn
+printToOutput :: T.Text -> IO ()
+printToOutput = TIO.putStrLn
