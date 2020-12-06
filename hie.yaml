@@ -1,0 +1,21 @@
+cradle:
+  multi:
+    - path: ./Setup.hs
+      config:
+        cradle:
+          direct:
+            arguments:
+              - "-package Cabal"
+              - "-package base"
+    - path: ./app
+      config:
+        cradle:
+          stack:
+    - path: ./src
+      config:
+        cradle:
+          stack:
+    - path: ./test
+      config:
+        cradle:
+          stack:

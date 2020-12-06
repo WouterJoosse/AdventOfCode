@@ -1,0 +1,66 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 38f08ca5f88e21a5e7b081ec4ef82f276ae40f94a5e4972db767f963f1c06247
+
+name:           AdventOfCode
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/Wouter Joosse/AdventOfCode#readme>
+homepage:       https://github.com/Wouter Joosse/AdventOfCode#readme
+bug-reports:    https://github.com/Wouter Joosse/AdventOfCode/issues
+author:         Wouter Joosse
+maintainer:     wouterjoosse@gmail.com
+copyright:      Copyright (c) 2020 Wouter Joosse
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/Wouter Joosse/AdventOfCode
+
+library
+  exposed-modules:
+      Utils
+      Y2020.Exercise1
+  other-modules:
+      Paths_AdventOfCode
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , text
+  default-language: Haskell2010
+
+executable AdventOfCode-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_AdventOfCode
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AdventOfCode
+    , base >=4.7 && <5
+    , text
+  default-language: Haskell2010
+
+test-suite AdventOfCode-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_AdventOfCode
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AdventOfCode
+    , base >=4.7 && <5
+    , text
+  default-language: Haskell2010
