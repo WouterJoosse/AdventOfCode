@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b995919576f7d7f860848474870d7e0dc15dda1ba64abd1c73f40fad0aa2ad9e
+-- hash: 352e75b4279dc0a141a1bf37a4b6ab78668cb94712df35c5f16d9bd5638ace8e
 
 name:           AdventOfCode
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/Wouter Joosse/AdventOfCode#readme>
-homepage:       https://github.com/Wouter Joosse/AdventOfCode#readme
-bug-reports:    https://github.com/Wouter Joosse/AdventOfCode/issues
+description:    Please see the README on GitHub at <https://github.com/WouterJoosse/AdventOfCode#readme>
+homepage:       https://github.com/WouterJoosse/AdventOfCode#readme
+bug-reports:    https://github.com/WouterJoosse/AdventOfCode/issues
 author:         Wouter Joosse
 maintainer:     wouterjoosse@gmail.com
 copyright:      Copyright (c) 2020 Wouter Joosse
@@ -23,12 +23,13 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/Wouter Joosse/AdventOfCode
+  location: https://github.com/WouterJoosse/AdventOfCode
 
 library
   exposed-modules:
       Utils
       Y2020.Day1
+      Y2020.Day2
   other-modules:
       Paths_AdventOfCode
   hs-source-dirs:
