@@ -1,6 +1,6 @@
 module Main where
 
-import Y2020.Exercise1 (exercise1)
+import Y2020.Day1 (day1)
 
 main :: IO ()
-main = exercise1
+main = day1
