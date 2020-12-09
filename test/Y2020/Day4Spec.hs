@@ -14,12 +14,10 @@ import           Y2020.Day4
 -- ===================================================================
 
 exampleInput :: T.Text
-exampleInput =
-  "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\nbyr:1937 iyr:2017 cid:147 hgt:183cm\n\niyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884\nhcl:#cfa07d byr:1929\n\nhcl:#ae17e1 iyr:2013\neyr:2024\necl:brn pid:760753108 byr:1931\nhgt:179cm\n\nhcl:#cfa07d eyr:2025 pid:166559648\niyr:2011 ecl:brn hgt:59in"
+exampleInput = "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\nbyr:1937 iyr:2017 cid:147 hgt:183cm\n\niyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884\nhcl:#cfa07d byr:1929\n\nhcl:#ae17e1 iyr:2013\neyr:2024\necl:brn pid:760753108 byr:1931\nhgt:179cm\n\nhcl:#cfa07d eyr:2025 pid:166559648\niyr:2011 ecl:brn hgt:59in"
 
-examplePassportValidText :: T.Text
-examplePassportValidText =
-  "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\nbyr:1937 iyr:2017 cid:147 hgt:183cm"
+examplePassportValidFields :: PassportValues
+examplePassportValidFields = ["ecl:gry","pid:860033327","eyr:2020","hcl:#fffffd","byr:1937","iyr:2017","cid:147","hgt:183cm"]
 
 examplePassportValid :: Passport
 examplePassportValid = Passport (Just 1937)
@@ -31,9 +29,8 @@ examplePassportValid = Passport (Just 1937)
                                 (Just 860033327)
                                 (Just 147)
 
-examplePassportInValidByrText :: T.Text
-examplePassportInValidByrText =
-  "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\n iyr:2017 cid:147 hgt:183cm"
+examplePassportInvalidByrFields:: PassportValues
+examplePassportInvalidByrFields = ["ecl:gry","pid:860033327","eyr:2020","hcl:#fffffd","iyr:2017","cid:147","hgt:183cm"]
 
 examplePassportInValidByr :: Passport
 examplePassportInValidByr = Passport Nothing
@@ -45,9 +42,8 @@ examplePassportInValidByr = Passport Nothing
                                      (Just 860033327)
                                      (Just 147)
 
-examplePassportInValidIyrText :: T.Text
-examplePassportInValidIyrText =
-  "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\nbyr:1937 cid:147 hgt:183cm"
+examplePassportInValidIyrFields :: PassportValues
+examplePassportInValidIyrFields = ["ecl:gry","pid:860033327","eyr:2020","hcl:#fffffd","byr:1937","cid:147","hgt:183cm"]
 
 examplePassportInValidIyr :: Passport
 examplePassportInValidIyr = Passport (Just 1937)
@@ -59,9 +55,8 @@ examplePassportInValidIyr = Passport (Just 1937)
                                      (Just 860033327)
                                      (Just 147)
 
-exampleNorthPoleCredentialText :: T.Text
-exampleNorthPoleCredentialText =
-  "hcl:#ae17e1 iyr:2013\neyr:2024\necl:brn pid:760753108 byr:1931\nhgt:179cm"
+exampleNorthPoleCredentialFields :: PassportValues
+exampleNorthPoleCredentialFields = ["hcl:#ae17e1","iyr:2013","eyr:2024","ecl:brn","pid:760753108","byr:1931","hgt:179cm"]
 
 exampleNorthPoleCredential :: Passport
 exampleNorthPoleCredential = Passport (Just 1931)
@@ -89,14 +84,19 @@ spec = do
 
     describe "parsePassport" $ do
       it "should fill all provided values in the passport" $ do
-        parsePassport examplePassportValidText `shouldBe` examplePassportValid
+        parsePassport examplePassportValidFields `shouldBe` examplePassportValid
       it "should fill missing values with Nothing" $ do
-        parsePassport examplePassportInValidByrText
+        parsePassport examplePassportInvalidByrFields
           `shouldBe` examplePassportInValidByr
-        parsePassport examplePassportInValidIyrText
+        parsePassport examplePassportInValidIyrFields
           `shouldBe` examplePassportInValidIyr
-        parsePassport exampleNorthPoleCredentialText
+        parsePassport exampleNorthPoleCredentialFields
           `shouldBe` exampleNorthPoleCredential
+
+    describe "parseDataField" $ do
+      it "should fill a missing value in a passport" $ do
+        parseDataField "pid:760753108" emptyPassport `shouldBe` emptyPassport { pid = Just 760753108}
+        parseDataField "iyr:2013" emptyPassport `shouldBe` emptyPassport { iyr = Just 2013}
 
     describe "isvalid" $ do
       it "should reject passports that have do not have required fields" $ do
