@@ -9,6 +9,10 @@ copyright:           "Copyright (c) 2020 Wouter Joosse"
 extra-source-files:
 - README.md
 - ChangeLog.md
+- resources/2020/day1.txt
+- resources/2020/day2.txt
+- resources/2020/day3.txt
+- resources/2020/day4.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
