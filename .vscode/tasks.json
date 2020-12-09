@@ -21,7 +21,8 @@
       "group": "build",
       "type": "shell",
       "label": "stack clean & build",
-      "command": "stack clean && stack build"
+      "command": "stack clean && stack build",
+      "problemMatcher": []
     },
     {
       "group": {

@@ -3,11 +3,16 @@ module Y2020.Day4 where
 
 import qualified Data.Text as T
 
-import Data.Maybe (isNothing)
+import Utils (openFile, printToOutput)
 
 day4 :: IO ()
 day4 = do
-  putStrLn "Day 4!"
+  input <- openFile "resources/2020/day4.txt"
+  let pVals = splitPassportInputs input
+  let passports = map parsePassport pVals
+  printToOutput (mconcat ["Result Day 4 - first part: ", T.pack . show . countValid $ passports]) 
+  printToOutput (mconcat ["Result Day 4 - second part: ", ""]) 
+  
 
 -- ===================================================
 --  Data, types and static values
