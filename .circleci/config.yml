@@ -32,6 +32,6 @@ jobs:
             - ".stack-work"
       - store_artifacts:
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: ~/.local/bin/aoc-exe
-          destination: aoc-exe
+          path: ~/.local/bin/aoc
+          destination: aoc
 
