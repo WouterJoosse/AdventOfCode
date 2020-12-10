@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  test:
+  build:
     docker:
       - image: fpco/stack-build:lts
         auth:
@@ -23,23 +23,6 @@ jobs:
           command: stack --no-terminal test
       - store_test_results:
           path: test-results
-  build:
-    docker:
-      - image: fpco/stack-build:lts
-        auth:
-          # context / project UI env-var reference
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD  
-    steps:
-      - restore_cache:
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          name: Restore Cached Dependencies
-          keys:
-            - cci-adventofcode-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
-            - cci-adventofcode-{{ checksum "stack.yaml" }}
-      - run:
-          name: Resolve/Update Dependencies
-          command: stack --no-terminal setup
       - run:
           name: Install executable
           command: stack --no-terminal install
@@ -49,13 +32,8 @@ jobs:
           paths:
             - "/root/.stack"
             - ".stack-work"
-      - store_artifacts:
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: ~/.local/bin/aoc
-          destination: aoc
 
 workflows:
   fullbuild:
     jobs:
-      - test
       - build
