@@ -22,7 +22,7 @@ jobs:
           name: Run tests
           command: stack --no-terminal test
       - store_test_results:
-          path: ~/test_results
+          path: test-results
   build:
     docker:
       - image: fpco/stack-build:lts
