@@ -1,7 +1,7 @@
 module Utils where
 
-import qualified Data.Text as T
-import qualified Data.Text.IO as TIO
+import qualified Data.Text                     as T
+import qualified Data.Text.IO                  as TIO
 
 {-| 
     Open a file and return its contents

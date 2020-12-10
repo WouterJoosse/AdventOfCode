@@ -1,18 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Y2020.Day4 where
 
-import qualified Data.Text as T
+import qualified Data.Text                     as T
 
-import Utils (openFile, printToOutput)
+import           Data.Ix                        ( inRange )
+import           Utils                          ( openFile
+                                                , printToOutput
+                                                )
 
 day4 :: IO ()
 day4 = do
   input <- openFile "resources/2020/day4.txt"
-  let pVals = splitPassportInputs input
+  let pVals     = splitPassportInputs input
   let passports = map parsePassport pVals
-  printToOutput (mconcat ["Result Day 4 - first part: ", T.pack . show . countValid $ passports]) 
-  printToOutput (mconcat ["Result Day 4 - second part: ", ""]) 
-  
+  printToOutput
+    (mconcat
+      ["Result Day 4 - first part: ", T.pack . show . countValid $ passports]
+    )
+  printToOutput
+    (mconcat
+      ["Result Day 4 - second part: ", T.pack . show . countValid' $ passports]
+    )
+
 
 -- ===================================================
 --  Data, types and static values
@@ -24,23 +33,30 @@ data Passport = Passport
   , hgt :: Maybe T.Text
   , hcl :: Maybe T.Text
   , ecl :: Maybe T.Text
-  , pid :: Maybe Int
+  , pid :: Maybe T.Text
   , cid :: Maybe Int
-  } deriving (Show, Eq)
+  }
+  deriving (Show, Eq)
 
 data PassportVerdict = Valid | Invalid | PossibleValid deriving (Eq)
-instance Show PassportVerdict where 
-  show Valid = "Valid"
-  show Invalid = "Invalid"
+instance Show PassportVerdict where
+  show Valid         = "Valid"
+  show Invalid       = "Invalid"
   show PossibleValid = "Possibly valid"
 
 type PassportField = T.Text
 type PassportValues = [PassportField]
 
 emptyPassport :: Passport
-emptyPassport = Passport {
-  byr=Nothing, iyr=Nothing, eyr=Nothing, hgt=Nothing, hcl=Nothing, ecl=Nothing, pid=Nothing, cid=Nothing
-}
+emptyPassport = Passport { byr = Nothing
+                         , iyr = Nothing
+                         , eyr = Nothing
+                         , hgt = Nothing
+                         , hcl = Nothing
+                         , ecl = Nothing
+                         , pid = Nothing
+                         , cid = Nothing
+                         }
 
 -- ===================================================
 --  Functions
@@ -55,42 +71,102 @@ parsePassport :: PassportValues -> Passport
 parsePassport t = parsePassport' t emptyPassport
 
 parsePassport' :: PassportValues -> Passport -> Passport
-parsePassport' [] p = p
-parsePassport' (x:xs) p = parsePassport' xs p' 
-  where p' = parseDataField x p
+parsePassport' []       p = p
+parsePassport' (x : xs) p = parsePassport' xs p' where p' = parseDataField x p
 
 -- | Parse a data field by splitting the text on ":" and 
 --   fill the value in the correct data field
 parseDataField :: PassportField -> Passport -> Passport
-parseDataField f p | k == "byr" = p {byr = Just (textToInt v)}
-                   | k == "iyr" = p {iyr = Just (textToInt v)}
-                   | k == "eyr" = p {eyr = Just (textToInt v)}
-                   | k == "hgt" = p {hgt = Just v}
-                   | k == "hcl" = p {hcl = Just v}
-                   | k == "ecl" = p {ecl = Just v}
-                   | k == "pid" = p {pid = Just (textToInt v)}
-                   | k == "cid" = p {cid = Just (textToInt v)}
-                   | otherwise = p
-  where (key:rest) = T.split (== ':') f
-        k = T.strip key
-        textToInt = read . T.unpack
-        v = head rest
+parseDataField f p | k == "byr" = p { byr = Just (textToInt v) }
+                   | k == "iyr" = p { iyr = Just (textToInt v) }
+                   | k == "eyr" = p { eyr = Just (textToInt v) }
+                   | k == "hgt" = p { hgt = Just v }
+                   | k == "hcl" = p { hcl = Just v }
+                   | k == "ecl" = p { ecl = Just v }
+                   | k == "pid" = p { pid = Just v }
+                   | k == "cid" = p { cid = Just (textToInt v) }
+                   | otherwise  = p
+ where
+  (key : rest) = T.split (== ':') f
+  k            = T.strip key
+  textToInt    = read . T.unpack
+  v            = head rest
 
 -- | If a 'Passport' field is missing, then it is invalid, 
 --   unless the only missing field is the 'cid' field.
 -- 
 --   If that is the case, then the passport is 'PossibleValid'.
 isvalid :: Passport -> PassportVerdict
-isvalid Passport {byr = Nothing} = Invalid
-isvalid Passport {iyr = Nothing} = Invalid
-isvalid Passport {eyr = Nothing} = Invalid
-isvalid Passport {hgt = Nothing} = Invalid
-isvalid Passport {hcl = Nothing} = Invalid
-isvalid Passport {ecl = Nothing} = Invalid
-isvalid Passport {pid = Nothing} = Invalid
-isvalid Passport {cid = Nothing} = PossibleValid
-isvalid _ = Valid
+isvalid Passport { byr = Nothing } = Invalid
+isvalid Passport { iyr = Nothing } = Invalid
+isvalid Passport { eyr = Nothing } = Invalid
+isvalid Passport { hgt = Nothing } = Invalid
+isvalid Passport { hcl = Nothing } = Invalid
+isvalid Passport { ecl = Nothing } = Invalid
+isvalid Passport { pid = Nothing } = Invalid
+isvalid Passport { cid = Nothing } = PossibleValid
+isvalid _                          = Valid
+
+-- | If a 'Passport' field is missing, or it has some invalid value
+--   then the passport is 'Invalid'.
+--   Except when the 'cid' value is missing, then it is 'PossibleValid'
+--   when all other values are valid
+isvalid' :: Passport -> PassportVerdict
+isvalid' p = case isvalid p of
+  Invalid -> Invalid
+  v       -> validateProperties p v
+
+validateProperties :: Passport -> PassportVerdict -> PassportVerdict
+validateProperties p v = if and (intProps ++ textProps) then v else Invalid
+ where
+  intProps       = zipWith validateProperty ints intvalidators
+  textProps      = zipWith validateProperty texts textvalidators
+  ints           = map ($ p) [byr, iyr, eyr]
+  texts          = map ($ p) [hgt, hcl, ecl, pid]
+  intvalidators  = [byrValidation, iyrValidation, eyrValidation]
+  textvalidators = [hgtValidation, hclValidation, eclValidation, pidValidation]
+
+
+validateProperty :: Maybe a -> (a -> Bool) -> Bool
+validateProperty Nothing  _ = False
+validateProperty (Just v) f = f v
+
+byrValidation :: Int -> Bool
+byrValidation = inRange (1920, 2002)
+
+iyrValidation :: Int -> Bool
+iyrValidation = inRange (2010, 2020)
+
+eyrValidation :: Int -> Bool
+eyrValidation = inRange (2020, 2030)
+
+hgtValidation :: T.Text -> Bool
+hgtValidation s = inrange v uom
+ where
+  inrange v uom | uom == "cm" = inRange (150, 193) v
+                | uom == "in" = inRange (59, 76) v
+                | otherwise   = False
+  uom = T.reverse . T.take 2 . T.reverse $ s
+  v   = read . T.unpack . T.dropEnd 2 $ s
+
+hclValidation :: T.Text -> Bool
+hclValidation s = (start == '#') && whiteList rest
+ where
+  start = T.head s
+  rest  = T.unpack . T.tail $ s
+  whiteList []       = True
+  whiteList (x : xs) = x `elem` (['a' .. 'f'] ++ ['0' .. '9']) && whiteList xs
+
+eclValidation :: T.Text -> Bool
+eclValidation t = t `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+
+pidValidation :: T.Text -> Bool
+pidValidation t = T.length t == 9 && T.all (`elem` ['0' .. '9']) t
 
 -- | Count the number of valid passports in a list of passports
 countValid :: [Passport] -> Int
-countValid = length . filter ( Invalid /=) . map isvalid
+countValid = length . filter (Invalid /=) . map isvalid
+
+-- | Count the number of valid passports in a list of passports, using input validation
+countValid' :: [Passport] -> Int
+countValid' = length . filter (Invalid /=) . map isvalid'
