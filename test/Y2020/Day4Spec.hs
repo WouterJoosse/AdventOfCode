@@ -173,7 +173,7 @@ spec = do
         countValid [exampleNorthPoleCredential, validNPC] `shouldBe` 2
       it "should count valid passports" $ do
         let validPassport = parsePassport . T.words $ "eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm"
-        countValid [examplePassportValid, validPassport] `shouldBe` 1
+        countValid [examplePassportValid, validPassport] `shouldBe` 2
 
     describe "byrValidation" $ do
       it "should validate the correct years" $ do
