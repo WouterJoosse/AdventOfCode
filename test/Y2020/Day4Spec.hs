@@ -8,11 +8,8 @@ import qualified Data.Text                     as T
 import           Data.List
 import           Test.Hspec
 import           Y2020.Day4
-import Utils
-
-import Data.List ( permutations )
-import System.Random ( Random(randomRIO) )
-import Control.Monad (filterM, replicateM)
+import           System.Random                  ( Random(randomRIO) )
+import           Control.Monad                  ( replicateM )
 
 -- ===================================================================
 --  Static mock stuff
@@ -148,6 +145,15 @@ spec = do
       it "should possibly validate north pole credentials" $ do
         isvalid exampleNorthPoleCredential `shouldBe` PossibleValid
 
+    describe "isvalid'" $ do
+      it "should validate passports with valid values" $ do
+        let validNPC= parsePassport . T.words $ "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f"
+        let invalidPassport = parsePassport . T.words $ "iyr:2019 hcl:#602927 eyr:1967 hgt:170cm ecl:grn pid:012533040 byr:1946"
+        let validPassport = parsePassport . T.words $ "eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm"
+        isvalid' validNPC `shouldBe` PossibleValid
+        isvalid' invalidPassport `shouldBe` Invalid
+        isvalid' validPassport `shouldBe` Valid
+
     describe "countValid" $ do
       it "should not count invalid passports" $ do
         countValid [examplePassportInValidByr, examplePassportInValidIyr]
@@ -156,6 +162,18 @@ spec = do
         countValid [exampleNorthPoleCredential] `shouldBe` 1
       it "should count valid passports" $ do
         countValid [examplePassportValid] `shouldBe` 1
+
+    describe "countValid'" $ do
+      it "should not count invalid passports" $ do
+        let invalidPassport = parsePassport . T.words $ "iyr:2019 hcl:#602927 eyr:1967 hgt:170cm ecl:grn pid:012533040 byr:1946"
+        let invalidPassports = [invalidPassport, examplePassportInValidByr]
+        countValid' invalidPassports `shouldBe` 0
+      it "should count North Pole Credentials" $ do
+        let validNPC= parsePassport . T.words $ "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f"
+        countValid [exampleNorthPoleCredential, validNPC] `shouldBe` 2
+      it "should count valid passports" $ do
+        let validPassport = parsePassport . T.words $ "eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm"
+        countValid [examplePassportValid, validPassport] `shouldBe` 1
 
     describe "byrValidation" $ do
       it "should validate the correct years" $ do
@@ -232,13 +250,16 @@ generateInvalidEyeColors validColors = filter (`notElem` validColors) colors
 
 generateValidPIDNumbers :: IO [T.Text]
 generateValidPIDNumbers = addPrefix <$> numbers
-  where addPrefix num = T.justifyRight 9 '0' . (T.pack . show) <$> num
-        numbers = generateNRandomNumbers 10 (1,999999999)
+ where
+  addPrefix num = T.justifyRight 9 '0' . (T.pack . show) <$> num
+  numbers = generateNRandomNumbers 10 (1, 999999999)
 
 generateIncorrectPIDNumbers :: [T.Text] -> IO [T.Text]
-generateIncorrectPIDNumbers validNumbers = filter (`notElem` validNumbers) <$> numbers
-  where numbers = map (T.pack . show) <$> generateNRandomNumbers 1000 (1,999999999)
+generateIncorrectPIDNumbers validNumbers =
+  filter (`notElem` validNumbers) <$> numbers
+ where
+  numbers = map (T.pack . show) <$> generateNRandomNumbers 1000 (1, 999999999)
 
-generateNRandomNumbers :: Int -> (Int,Int) -> IO [Int]
-generateNRandomNumbers n r = do 
+generateNRandomNumbers :: Int -> (Int, Int) -> IO [Int]
+generateNRandomNumbers n r = do
   replicateM n $ randomRIO r
