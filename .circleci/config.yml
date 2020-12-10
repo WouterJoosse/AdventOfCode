@@ -54,3 +54,8 @@ jobs:
           path: ~/.local/bin/aoc
           destination: aoc
 
+workflows:
+  fullbuild:
+    jobs:
+      - test
+      - build
