@@ -3,6 +3,7 @@ module Y2020.Day4 where
 
 import qualified Data.Text as T
 
+import Data.Ix (inRange)
 import Utils (openFile, printToOutput)
 
 day4 :: IO ()
@@ -24,7 +25,7 @@ data Passport = Passport
   , hgt :: Maybe T.Text
   , hcl :: Maybe T.Text
   , ecl :: Maybe T.Text
-  , pid :: Maybe Int
+  , pid :: Maybe T.Text
   , cid :: Maybe Int
   } deriving (Show, Eq)
 
@@ -68,7 +69,7 @@ parseDataField f p | k == "byr" = p {byr = Just (textToInt v)}
                    | k == "hgt" = p {hgt = Just v}
                    | k == "hcl" = p {hcl = Just v}
                    | k == "ecl" = p {ecl = Just v}
-                   | k == "pid" = p {pid = Just (textToInt v)}
+                   | k == "pid" = p {pid = Just v}
                    | k == "cid" = p {cid = Just (textToInt v)}
                    | otherwise = p
   where (key:rest) = T.split (== ':') f
@@ -90,6 +91,36 @@ isvalid Passport {ecl = Nothing} = Invalid
 isvalid Passport {pid = Nothing} = Invalid
 isvalid Passport {cid = Nothing} = PossibleValid
 isvalid _ = Valid
+
+byrValidation :: Int -> Bool
+byrValidation = inRange (1920, 2002) 
+
+iyrValidation :: Int -> Bool
+iyrValidation = inRange (2010, 2020)
+
+eyrValidation :: Int -> Bool
+eyrValidation  = inRange (2020, 2030)
+
+hgtValidation :: T.Text -> Bool
+hgtValidation s = inrange v uom
+  where inrange v uom | uom == "cm" = inRange (150, 193) v
+                      | uom == "in" = inRange (59, 76) v
+                      | otherwise = False
+        uom = T.reverse . T.take 2 . T.reverse $ s
+        v = read . T.unpack . T.dropEnd 2 $ s
+
+hclValidation :: T.Text -> Bool
+hclValidation s = (start == '#') && whiteList rest
+  where start = T.head s
+        rest = T.unpack . T.tail $ s
+        whiteList [] = True
+        whiteList (x:xs) = x `elem` (['a'..'f'] ++ ['0'..'9']) && whiteList xs
+
+eclValidation :: T.Text -> Bool
+eclValidation _ = False
+
+pidValidation :: T.Text -> Bool
+pidValidation _ = False
 
 -- | Count the number of valid passports in a list of passports
 countValid :: [Passport] -> Int
