@@ -117,10 +117,10 @@ hclValidation s = (start == '#') && whiteList rest
         whiteList (x:xs) = x `elem` (['a'..'f'] ++ ['0'..'9']) && whiteList xs
 
 eclValidation :: T.Text -> Bool
-eclValidation _ = False
+eclValidation t = t `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
 pidValidation :: T.Text -> Bool
-pidValidation _ = False
+pidValidation t = T.length t == 9 && T.all (`elem` ['0'..'9']) t
 
 -- | Count the number of valid passports in a list of passports
 countValid :: [Passport] -> Int
