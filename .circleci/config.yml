@@ -22,7 +22,7 @@ jobs:
           name: Run tests
           command: stack --no-terminal test
       - store_test_results:
-          path: test-results
+          path: test
       - run:
           name: Install executable
           command: stack --no-terminal install
