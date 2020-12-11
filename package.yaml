@@ -13,6 +13,7 @@ extra-source-files:
 - resources/2020/day2.txt
 - resources/2020/day3.txt
 - resources/2020/day4.txt
+- resources/2020/day5.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
