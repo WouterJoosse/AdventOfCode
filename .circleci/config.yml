@@ -21,6 +21,8 @@ jobs:
       - run:
           name: Run tests
           command: stack --no-terminal test
+      - store_test_results:
+          path: test
       - run:
           name: Install executable
           command: stack --no-terminal install
@@ -30,8 +32,8 @@ jobs:
           paths:
             - "/root/.stack"
             - ".stack-work"
-      - store_artifacts:
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: ~/.local/bin/aoc
-          destination: aoc
 
+workflows:
+  fullbuild:
+    jobs:
+      - build
