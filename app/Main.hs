@@ -6,4 +6,8 @@ import Y2020.Day3 (day3)
 import Y2020.Day4 (day4)
 
 main :: IO ()
-main = day4
+main = do
+    day1
+    day2
+    day3
+    day4
