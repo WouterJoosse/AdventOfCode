@@ -52,15 +52,14 @@ spec = do
         foldl maxSeat (Seat 0 0 0) exampleInputSeats `shouldBe` Seat 102 4 820
 
     describe "halveRange" $ do
-        it "should divide a range in two and return the correct half" $ do
-            halveRange (0, 127) 'F' `shouldBe` (0,63)
-            halveRange (0, 127) 'B' `shouldBe` (64,127)
-            halveRange (40, 47) 'F' `shouldBe` (40,43)
-            halveRange (40, 47) 'B' `shouldBe` (44,47)
-            halveRange (44, 45) 'F' `shouldBe` (44,44)
-            halveRange (44, 45) 'F' `shouldBe` (45,45)
-            halveRange (44, 44) 'F' `shouldBe` (44,44)
-            halveRange (0, 127) 'R' `shouldBe` (64,127)
-            halveRange (1, 3) 'L' `shouldBe` (1,1)
-            
+      it "should divide a range in two and return the correct half" $ do
+        halveRange (0, 127) 'F' `shouldBe` (0, 63)
+        halveRange (0, 127) 'B' `shouldBe` (64, 127)
+        halveRange (40, 47) 'F' `shouldBe` (40, 43)
+        halveRange (40, 47) 'B' `shouldBe` (44, 47)
+        halveRange (44, 45) 'F' `shouldBe` (44, 44)
+        halveRange (44, 45) 'B' `shouldBe` (45, 45)
+        halveRange (44, 44) 'F' `shouldBe` (44, 44)
+        halveRange (0, 127) 'R' `shouldBe` (64, 127)
+        halveRange (1, 3) 'L' `shouldBe` (1, 1)
 
