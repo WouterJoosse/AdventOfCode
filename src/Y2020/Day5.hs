@@ -3,22 +3,22 @@ module Y2020.Day5 where
 
 import qualified Data.Text                     as T
 
-import Data.List
-import           Utils (openFile, printToOutput)
+import           Data.List
 
-day5 :: IO ()
-day5 = do
-  input <- openFile "resources/2020/day5.txt"
-  let seats = map parseSeat (T.lines input) 
-  let result = foldl maxSeat (Seat 0 0 0) seats
-  printToOutput (mconcat
-      ["Result Day 5 - first part: ", T.pack . show . seatId $ result ]
-    )
-  let ids = sort . map seatId $ seats
-  let missingIds = filter (`notElem` ids) [head ids .. last ids]
-  printToOutput (mconcat
-      ["Result Day 5 - second part: ", T.pack . show $ missingIds ]
-    )
+day5 :: T.Text -> T.Text
+day5 input =
+  let seats      = map parseSeat (T.lines input)
+      result     = foldl maxSeat (Seat 0 0 0) seats
+      ids        = sort . map seatId $ seats
+      missingIds = filter (`notElem` ids) [head ids .. last ids]
+  in  mconcat
+        [ "Result Day 5 - first part: "
+        , T.pack . show . seatId $ result
+        , "\n"
+        , "Result Day 5 - second part: "
+        , T.pack . show $ missingIds
+        ]
+
 
 
 -- =========================================
@@ -53,18 +53,19 @@ parseSeat t = Seat rowNum seatNum id
 
 -- | Get the row number from the input text
 parseRowNum :: T.Text -> Int
-parseRowNum = fst . traverseBinaryRangeTree (0,127) . T.take 7 
+parseRowNum = fst . traverseBinaryRangeTree (0, 127) . T.take 7
 
 -- | Get the seat number from the input text
 parseSeatNum :: T.Text -> Int
-parseSeatNum = fst . traverseBinaryRangeTree (0,8) . T.drop 7 
+parseSeatNum = fst . traverseBinaryRangeTree (0, 8) . T.drop 7
 
 -- | Traverse the tree encoding, and divide the range accordingly
 traverseBinaryRangeTree :: (Int, Int) -> T.Text -> (Int, Int)
 traverseBinaryRangeTree r t | T.empty == t = r
-                            | otherwise = traverseBinaryRangeTree r' t'
-                              where r' = halveRange r (T.head t)
-                                    t' = T.tail t
+                            | otherwise    = traverseBinaryRangeTree r' t'
+ where
+  r' = halveRange r (T.head t)
+  t' = T.tail t
 
 -- | Divide the range in two and return one of the halves, based on the
 --   input character.

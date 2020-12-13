@@ -4,23 +4,19 @@ module Y2020.Day4 where
 import qualified Data.Text                     as T
 
 import           Data.Ix                        ( inRange )
-import           Utils                          ( openFile
-                                                , printToOutput
-                                                )
 
-day4 :: IO ()
-day4 = do
-  input <- openFile "resources/2020/day4.txt"
+day4 :: T.Text -> T.Text
+day4 input =
   let pVals     = splitPassportInputs input
-  let passports = map parsePassport pVals
-  printToOutput
-    (mconcat
-      ["Result Day 4 - first part: ", T.pack . show . countValid $ passports]
-    )
-  printToOutput
-    (mconcat
-      ["Result Day 4 - second part: ", T.pack . show . countValid' $ passports]
-    )
+      passports = map parsePassport pVals
+  in  mconcat
+        [ "Result Day 4 - first part: "
+        , T.pack . show . countValid $ passports
+        , "\n"
+        , "Result Day 4 - second part: "
+        , T.pack . show . countValid' $ passports
+        ]
+
 
 
 -- ===================================================
