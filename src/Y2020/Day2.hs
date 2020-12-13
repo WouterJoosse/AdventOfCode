@@ -5,31 +5,23 @@ import qualified Data.Text                     as T
 
 import           Text.Read                      ( readMaybe )
 import           Control.Applicative            ( Applicative(liftA2) )
-
-import           Utils                          ( openFile
-                                                , printToOutput
-                                                )
 import           Data.Bits                      ( Bits(xor) )
 import           Data.Maybe                     ( fromMaybe )
 
-day2 :: IO ()
-day2 = do
-  inputs <- openFile "resources/2020/day2.txt"
-  let records  = map parseRecord (T.lines inputs)
-  let results1 = map checkRecord records
-  let results2 = map checkRecord' records
-  printToOutput
-    (mconcat
-      [ "Result Day 2 - first part: "
-      , T.pack . show . countTrues $ results1
-      ]
-    )
-  printToOutput
-    (mconcat
-      [ "Result Day 2 - second part: "
-      , T.pack . show . countTrues $ results2
-      ]
-    )
+day2 :: T.Text -> T.Text
+day2 input = output
+ where
+  records  = map parseRecord (T.lines input)
+  results1 = map checkRecord records
+  results2 = map checkRecord' records
+  output   = mconcat
+    [ "Result Day 2 - first part: "
+    , T.pack . show . countTrues $ results1
+    , "\n"
+    , "Result Day 2 - second part: "
+    , T.pack . show . countTrues $ results2
+    ]
+
 
 -- ===================================================
 --  Data, types and static values
