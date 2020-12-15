@@ -25,12 +25,18 @@ spec = do
   describe "day6" $ do
     it "should return the correct values on the test input" $ do
       day6part1 exampleInputGrouped `shouldBe` 11
+      day6part2 exampleInputGrouped `shouldBe` 6
 
     describe "parseGroups" $ do
       it "should parse the example input into groups, seperated by an empty line" $ do
         parseGroups exampleInput `shouldBe` exampleInputGrouped
 
-    describe "distinctAnswers" $ do
+    describe "unionAnswers" $ do
       it "should count the distinct number of 'yes' answers in a group" $ do
-        map distinctAnswers exampleInputGrouped `shouldBe` [3,3,3,1,1]
-        (distinctAnswers . (:[]) . T.pack $ ['a'..'z'])  `shouldBe` 26
+        map unionAnswers exampleInputGrouped `shouldBe` [3,3,3,1,1]
+        (unionAnswers . (:[]) . T.pack $ ['a'..'z'])  `shouldBe` 26
+
+    describe "intersectAnswers" $ do
+      it "should count the number of 'yes' answers occurring in all answers in a group" $ do
+        map intersectAnswers exampleInputGrouped `shouldBe` [3,0,1,1,1]
+        (intersectAnswers . (:[]) . T.pack $ ['a'..'z'])  `shouldBe` 26
