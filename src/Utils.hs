@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Utils where
 
 import qualified Data.Text                     as T
@@ -14,3 +15,9 @@ openFile = TIO.readFile . T.unpack
 -}
 printToOutput :: T.Text -> IO ()
 printToOutput = TIO.putStrLn
+
+-- | Split input on empty lines into lists of text
+splitInputOnEmptyLine :: T.Text -> [[T.Text]]
+splitInputOnEmptyLine t = 
+    let inputLines = T.splitOn "\n\n" t
+    in map T.words inputLines
