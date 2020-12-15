@@ -10,14 +10,16 @@ import           Data.Maybe                     ( isNothing
 
 day1 :: T.Text -> T.Text
 day1 input = output
-  where resultPart1 = T.pack . show . findAnswer2 2020 $ input
-        resultPart2 = T.pack . show . findAnswer3 2020 $ input
-        output = 
-          mconcat [
-            "Result Day 1 - first part: ", resultPart1,
-            "\n",
-            "Result Day 1 - second part: ", resultPart2
-          ]
+ where
+  resultPart1 = T.pack . show . findAnswer2 2020 $ input
+  resultPart2 = T.pack . show . findAnswer3 2020 $ input
+  output      = mconcat
+    [ "Result Day 1 - first part: "
+    , resultPart1
+    , "\n"
+    , "Result Day 1 - second part: "
+    , resultPart2
+    ]
 
 -- | Find the answer to the first assignment: find two numbers that add up to a target number
 findAnswer2 :: Int -> T.Text -> Int
