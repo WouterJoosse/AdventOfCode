@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 43f6bb2ad7371358363e93d8697dc4f8277523f5de69536b1ef74c8f847da2c2
+-- hash: 945b9762bc34c80266033ba73605597fd825a4bf22e5b0d54776c1c75346a553
 
 name:           AdventOfCode
 version:        0.1.0.0
@@ -50,6 +50,7 @@ library
     , hspec
     , random
     , text
+    , unordered-containers >=0.2.12.0
   default-language: Haskell2010
 
 executable aoc
@@ -66,6 +67,7 @@ executable aoc
     , hspec
     , random
     , text
+    , unordered-containers >=0.2.12.0
   default-language: Haskell2010
 
 test-suite tests
@@ -89,4 +91,5 @@ test-suite tests
     , hspec
     , random
     , text
+    , unordered-containers >=0.2.12.0
   default-language: Haskell2010
