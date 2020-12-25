@@ -13,10 +13,10 @@ day6 input =
       result1 = day6part1 groups
       result2 = day6part2 groups
   in  mconcat
-        [ "Result Day 1 - first part: "
+        [ "Result Day 6 - first part: "
         , T.pack . show $ result1
         , "\n"
-        , "Result Day 1 - second part: "
+        , "Result Day 6 - second part: "
         , T.pack . show $ result2
         ]
 

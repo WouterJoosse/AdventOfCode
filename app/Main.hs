@@ -9,6 +9,7 @@ import Y2020.Day3 (day3)
 import Y2020.Day4 (day4)
 import Y2020.Day5 (day5)
 import Y2020.Day6 (day6)
+import Y2020.Day7 (day7)
 
 main :: IO ()
 main = do
@@ -24,3 +25,5 @@ main = do
     printToOutput . day5 $ input
     input <- openFile "resources/2020/day6.txt"
     printToOutput . day6 $ input
+    input <- openFile "resources/2020/day7.txt"
+    printToOutput . day7 $ input
